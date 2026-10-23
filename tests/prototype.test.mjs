@@ -55,17 +55,17 @@ test('direct key presses respect timing; repeats do not score; guitar recovers',
   await game.start(.65)
   assert.equal(game.sources[0].time, game.sources[1].time)
   game.audio.currentTime = game.started + 1.85
-  press(game, 'KeyA')
+  press(game, 'KeyD')
   assert.equal(game.score, 0)
   assert.equal(game.guitar.gain.value, 0)
   game.audio.currentTime = game.started + 1.861
-  press(game, 'KeyA')
+  press(game, 'KeyD')
   assert.equal(game.score, 50)
   assert.equal(game.guitar.gain.value, 1)
-  press(game, 'KeyA', true)
+  press(game, 'KeyD', true)
   assert.equal(game.score, 50)
   game.audio.currentTime = game.started + 2.641
-  press(game, 'KeyA')
+  press(game, 'KeyD')
   assert.equal(game.score, 50)
   assert.equal(game.streak, 0)
   assert.equal(game.guitar.gain.value, 0)
@@ -76,13 +76,13 @@ test('chords complete with separate color key presses; restart clears state', as
   const game = new Prototype(canvas(), () => {})
   await game.start(.5)
   game.audio.currentTime = game.started + 6
-  press(game, 'KeyA')
+  press(game, 'KeyD')
   assert.equal(game.score, 0)
   assert.equal(game.streak, 0)
   press(game, 'Space')
   assert.equal(game.guitar.gain.value, 0)
   game.audio.currentTime += .03
-  press(game, 'KeyD')
+  press(game, 'KeyJ')
   assert.equal(game.score, 100)
   const oldSources = [...game.sources]
   await game.start(.25)
@@ -103,7 +103,7 @@ test('Escape freezes progress and resumes synchronized stems at the saved offset
   const game = new Prototype(canvas(), () => {})
   await game.start(.5)
   game.audio.currentTime = game.started + 2
-  press(game, 'KeyA')
+  press(game, 'KeyD')
   game.mechanics.energy = .75
   game.mechanics.activate()
   const score = game.score, health = game.mechanics.health
@@ -113,7 +113,7 @@ test('Escape freezes progress and resumes synchronized stems at the saved offset
   assert.ok(game.audio.sources.every(source => source.stopped))
   game.audio.currentTime += 30
   game.render()
-  press(game, 'KeyD')
+  press(game, 'KeyJ')
   press(game, 'Space')
   assert.equal(game.position(), 2)
   assert.equal(game.score, score)
@@ -139,14 +139,14 @@ test('paused releases do not fail sustains; reholding allows continuation', asyn
   const game = new Prototype(canvas(), () => {})
   await game.start(.5)
   game.audio.currentTime = game.started + 2
-  press(game, 'KeyA')
+  press(game, 'KeyD')
   game.mechanics.hold(0, 2, 4)
   await game.togglePause()
   const health = game.mechanics.health
-  game.keyup({code:'KeyA'})
+  game.keyup({code:'KeyD'})
   assert.equal(game.mechanics.health, health)
   assert.equal(game.mechanics.sustains.length, 1)
-  press(game, 'KeyA')
+  press(game, 'KeyD')
   await game.togglePause()
   assert.equal(game.mechanics.health, health)
   game.audio.currentTime = game.started + 3
@@ -159,13 +159,13 @@ test('wrong color fails and an incomplete chord expires without scoring', async 
   const game = new Prototype(canvas(), () => {})
   await game.start(.5)
   game.audio.currentTime = game.started + 2
-  press(game, 'KeyS')
+  press(game, 'KeyF')
   assert.equal(game.score, 0)
   assert.equal(game.guitar.gain.value, 0)
-  press(game, 'KeyA')
+  press(game, 'KeyD')
   assert.equal(game.score, 50)
   game.audio.currentTime = game.started + 6
-  press(game, 'KeyA')
+  press(game, 'KeyD')
   game.expire(6.141)
   assert.equal(game.score, 50)
   assert.equal(game.streak, 0)
@@ -209,9 +209,9 @@ test('boost requires half energy, successful chart phrases charge once, misses c
 
 test('bindings require exactly five distinct usable color keys', () => {
   assert.equal(validKeys(['KeyQ', 'KeyW', 'KeyE', 'KeyR', 'KeyT']), true)
-  assert.equal(validKeys(['KeyA', 'KeyA', 'KeyD', 'KeyF', 'KeyG']), false)
-  assert.equal(validKeys(['Space', 'KeyS', 'KeyD', 'KeyF', 'KeyG']), false)
-  assert.equal(validKeys(['KeyA']), false)
+  assert.equal(validKeys(['KeyD', 'KeyD', 'KeyJ', 'KeyK', 'KeyL']), false)
+  assert.equal(validKeys(['Space', 'KeyF', 'KeyJ', 'KeyK', 'KeyL']), false)
+  assert.equal(validKeys(['KeyD']), false)
 })
 
 test('remapped keyboard input hits and original bindings no longer trigger', async () => {
@@ -219,7 +219,7 @@ test('remapped keyboard input hits and original bindings no longer trigger', asy
   game.setSettings({ keys: ['KeyQ', 'KeyW', 'KeyE', 'KeyR', 'KeyT'], volume: 50, speed: 2 })
   await game.start(.5)
   game.audio.currentTime = game.started + 2
-  press(game, 'KeyA')
+  press(game, 'KeyD')
   assert.equal(game.score, 0)
   press(game, 'KeyQ')
   assert.equal(game.score, 50)
@@ -234,7 +234,7 @@ test('mixed audio bypasses guitar attenuation; discovered stems route guitar ind
   assert.equal(game.sources.length, 1)
   assert.equal(game.sources[0].destination, game.master)
   game.audio.currentTime = game.started + 2
-  press(game, 'KeyS')
+  press(game, 'KeyF')
   assert.equal(game.guitar.gain.value, 0)
   assert.equal(game.master.gain.value, .5)
   const separated = { ...mixed, id: 'separated', reactiveGuitar: true, stems: [{ url: 'song', guitar: false }, { url: 'guitar', guitar: true }, { url: 'bass', guitar: false }] }
@@ -268,7 +268,7 @@ test('preparation gates playback and cancellation cannot start a late song', asy
   await prepared
   assert.equal(game.active, false)
   assert.equal(game.sources.length, 0)
-  press(game, 'KeyA')
+  press(game, 'KeyD')
   assert.equal(game.score, 0)
   ready()
   await start
@@ -292,9 +292,9 @@ test('finished attempts report a chord once, preserve maximum combo and reset on
   game.notes = [{ time: 1, lanes: [0, 2], durations: [0, 0] }, { time: 1.5, lanes: [1], durations: [0] }]
   game.duration = 2
   game.audio.currentTime = game.started + 1
-  press(game, 'KeyA'); assert.equal(game.stats.hits, 0)
-  press(game, 'KeyD'); assert.equal(game.stats.hits, 1)
-  game.audio.currentTime = game.started + 1.5; press(game, 'KeyS')
+  press(game, 'KeyD'); assert.equal(game.stats.hits, 0)
+  press(game, 'KeyJ'); assert.equal(game.stats.hits, 1)
+  game.audio.currentTime = game.started + 1.5; press(game, 'KeyF')
   game.audio.currentTime = game.started + 2; game.render(); game.render()
   assert.equal(results.length, 1)
   assert.equal(results[0].completed, true); assert.equal(results[0].grade, 'SS')
@@ -319,7 +319,7 @@ test('results keep quiet looping audio without accepting hits and clean it up on
     assert.equal(game.master.gain.value, .8 * .15)
     if (!completed) assert.deepEqual(game.sources, playing)
     const score = game.score
-    press(game, 'KeyA')
+    press(game, 'KeyD')
     assert.equal(game.score, score)
     game.setVolume(.4)
     assert.equal(game.master.gain.value, .4 * .15)

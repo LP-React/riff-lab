@@ -4,7 +4,7 @@
 
 Build a browser-based, guitar-only rock rhythm game as a React learning project, inspired by Clone Hero / Guitar Hero. Use five descending lanes and disc-shaped notes on a perspective highway.
 
-First-phase target: per-song difficulties, synchronized audio, chords, sustains, streaks, score multipliers, boost, pause/restart, results, rock menus, audio/SFX settings, remappable keys, and optional per-song video. The user selected direct A/S/D/F/G keyboard play without a separate strum key. Future direction includes public release, SEO, GA4/Clarity, and synchronized versus rooms for up to four players; these integrations are not implemented. Additional instruments, accounts, and public uploads are not established requirements.
+First-phase target: per-song difficulties, synchronized audio, chords, sustains, streaks, score multipliers, boost, pause/restart, results, rock menus, audio/SFX settings, remappable keys, and optional per-song video. The user selected direct D/F/J/K/L keyboard play (green/red/yellow/blue/orange) without a separate strum key, with default scroll speed 2×. Saved custom settings remain in effect; Reset restores these defaults. Future direction includes public release, SEO, GA4/Clarity, and synchronized versus rooms for up to four players; these integrations are not implemented. Additional instruments, accounts, and public uploads are not established requirements.
 
 ## Technical foundation
 
