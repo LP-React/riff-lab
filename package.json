@@ -12,7 +12,10 @@
     "import:dragonforce": "node scripts/import-songs.mjs",
     "import:songs": "node scripts/import-songs.mjs",
     "start": "next start",
-    "assets:songs": "node scripts/prepare-song-assets.mjs"
+    "assets:songs": "node scripts/prepare-song-assets.mjs",
+    "hosting:prepare": "node scripts/export-hosting-song.mjs",
+    "firebase:login": "firebase login",
+    "hosting:deploy": "firebase deploy --config firebase.assets.json --project riff-lab-maps --only hosting"
   },
   "dependencies": {
     "next": "^16.3.5",
@@ -26,6 +29,7 @@
     "@types/react-dom": "^19.2.7",
     "eslint": "^10.10.0",
     "eslint-plugin-react-hooks": "^7.1.1",
+    "firebase-tools": "^15.34.1",
     "globals": "^17.12.0",
     "midi-file": "^1.2.4",
     "parse-sng": "^4.0.3",

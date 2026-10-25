@@ -16,6 +16,10 @@ next-env.d.ts
 *.tsbuildinfo
 public/songs
 *.local
+.firebase/
+hosting-assets/
+hosting-metadata/
+firebase-debug.log*
 
 # Editor directories and files
 .vscode/*
