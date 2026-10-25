@@ -1,6 +1,14 @@
 import type { ChartNote } from '../game/chart'
 import type { SongTheme } from './presentation'
 export type Difficulty = 'easy' | 'medium' | 'hard' | 'expert'
+export interface CatalogSong extends Song {
+  schemaVersion: 1
+  difficulties: Difficulty[]
+  chartUrl: string
+  version: string
+  preview: string
+  stems: { url: string; guitar: boolean }[]
+}
 export interface Song {
   id: string
   title: string

@@ -216,6 +216,8 @@
 .preview-player[data-playing=true] .preview-meter i:nth-child(3) { animation-delay:-.65s; }
 .preview-player[data-playing=true] .preview-meter i:nth-child(4) { animation-delay:-.2s; }
 .song-row-trailing { display:flex; align-items:center; gap:14px; flex-shrink:0; }
+.song-library, .song-detail { min-width:0; }
+@media(max-width:760px) { .catalog-screen { overflow-x:clip; } .catalog-layout { grid-template-columns:minmax(0,1fr); } }
 .song-row-meter { display:flex; align-items:center; height:30px; gap:3px; }
 .song-row-meter i { width:3px; height:24px; border-radius:2px; background:var(--on-accent); animation:preview-meter .7s ease-in-out infinite alternate; }
 .song-row-meter i:nth-child(2) { animation-delay:-.25s; }

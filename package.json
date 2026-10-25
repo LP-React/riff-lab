@@ -4,8 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "node scripts/prepare-song-assets.mjs && next dev --hostname 127.0.0.1 --port 5173",
-    "build": "node scripts/prepare-song-assets.mjs && next build",
+    "dev": "node scripts/clear-local-song-cache.mjs && next dev --hostname 127.0.0.1 --port 5173",
+    "build": "node scripts/clear-local-song-cache.mjs && next build",
     "lint": "eslint .",
     "preview": "next start --hostname 127.0.0.1 --port 5173",
     "test": "node --test tests/*.test.mjs",
@@ -15,7 +15,8 @@
     "assets:songs": "node scripts/prepare-song-assets.mjs",
     "hosting:prepare": "node scripts/export-hosting-song.mjs",
     "firebase:login": "firebase login",
-    "hosting:deploy": "firebase deploy --config firebase.assets.json --project riff-lab-maps --only hosting"
+    "hosting:deploy": "firebase deploy --config firebase.assets.json --project riff-lab-maps --only hosting",
+    "hosting:publish": "node scripts/publish-hosting-song.mjs"
   },
   "dependencies": {
     "next": "^16.3.5",

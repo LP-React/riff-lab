@@ -46,13 +46,17 @@ export async function exportHostingSong(id, project = projectRoot) {
   for (const file of files) await writeSafe(resolve(output, 'songs', id, version, file.name), file.data, output)
   const base = `https://riff-lab-maps.web.app/songs/${id}/${version}`
   const mediaUrl = path => `${base}/media/${encodeURIComponent(basename(path))}`
+  const customizations = await readFile(resolve(root, 'src/songs/presentation.json'), 'utf8').then(JSON.parse).catch(error => { if (error.code === 'ENOENT') return {}; throw error })
+  const presentation = customizations[id] ?? {}
   const document = {
     schemaVersion: 1, published: false,
     title: song.title, artist: song.artist, album: song.album ?? '', charter: song.charter ?? '', duration: song.duration,
     difficulties: song.difficulties, chartUrl: `${base}/chart.json`,
     artwork: song.artwork ? mediaUrl(song.artwork) : '', preview: mediaUrl(song.preview), previewStart: song.previewStart ?? 0,
     stems: song.stems.map(stem => ({ url: mediaUrl(stem.path), guitar: stem.guitar })),
-    reactiveGuitar: song.reactiveGuitar, version,
+    reactiveGuitar: song.reactiveGuitar, genre: song.genre ?? '', year: song.year ?? '', openNotes: song.openNotes ?? 0,
+    ...(presentation.theme ? { theme: presentation.theme } : {}), ...(presentation.description ? { description: presentation.description } : {}),
+    version,
   }
   await writeSafe(resolve(metadataOutput, `${id}.json`), JSON.stringify(document, null, 2) + '\n', metadataOutput)
   return { id, version, files: files.length, bytes: files.reduce((sum, file) => sum + file.data.length, 0), chartUrl: document.chartUrl }

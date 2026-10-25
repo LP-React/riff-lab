@@ -1,7 +1,6 @@
 import { VolumeControl } from './VolumeControl'
 import { useEffect, useRef, useState } from 'react'
 import type { RefObject } from 'react'
-import { songs } from '../songs/catalog'
 import { menuLevels } from '../game/menu-audio'
 import { fallbackTheme } from '../songs/presentation'
 import { MenuFade, menuFadeTimes } from '../game/menu-fade'
@@ -9,7 +8,7 @@ import { useSession } from '../App'
 
 export function HomeMusic({ volume, onVolumeChange, canvas, index, onSongChange }: { volume: number; onVolumeChange: (volume: number) => void; canvas: RefObject<HTMLCanvasElement | null>; index: number; onSongChange: (index: number) => void }) {
   const [playing, setPlaying] = useState(true), [error, setError] = useState('')
-  const { homeMuted: muted, setHomeMuted: setMuted } = useSession()
+  const { songs, homeMuted: muted, setHomeMuted: setMuted } = useSession()
   const [autoStart, setAutoStart] = useState(true)
   const audio = useRef<HTMLAudioElement>(null)
   const fade = useRef<MenuFade | null>(null)
@@ -148,7 +147,7 @@ export function HomeMusic({ volume, onVolumeChange, canvas, index, onSongChange 
     audio.current!.muted = true; setMuted(true)
   }
   return <div className="home-music" aria-label="Reproductor del menú">
-    <audio ref={audio} src={song.preview} preload="auto" loop muted={muted} autoPlay={autoStart} playsInline onLoadedMetadata={() => { const player = audio.current!; player.currentTime = Math.max(0, Math.min(song.previewStart ?? 0, Math.max(0, player.duration - 1))); if (continuePlaying.current) void play() }} onPlay={() => setPlaying(true)} onPause={() => { if (!continuePlaying.current) setPlaying(false) }} onError={() => { pause(); setError('Audio no disponible. Prueba otra canción.') }} />
+    <audio crossOrigin="anonymous" ref={audio} src={song.preview} preload="auto" loop muted={muted} autoPlay={autoStart} playsInline onLoadedMetadata={() => { const player = audio.current!; player.currentTime = Math.max(0, Math.min(song.previewStart ?? 0, Math.max(0, player.duration - 1))); if (continuePlaying.current) void play() }} onPlay={() => setPlaying(true)} onPause={() => { if (!continuePlaying.current) setPlaying(false) }} onError={() => { pause(); setError('Audio no disponible. Prueba otra canción.') }} />
     {muted && <button className="home-sound-prompt" onClick={() => void play(true)}><span aria-hidden="true">♫</span> Activar sonido</button>}
     <img src={song.artwork} alt="" />
     <div className="home-music-copy"><small>{playing ? muted ? 'REPRODUCIENDO · SIN SONIDO' : 'SONANDO AHORA' : 'EN PAUSA'}</small><strong>{song.title}</strong><span>{song.artist}</span>{error && <span role="status">{error}</span>}</div>

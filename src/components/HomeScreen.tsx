@@ -1,14 +1,15 @@
+import { useSession } from '../App'
 import { useEffect, useRef, useState } from 'react'
 import type { CSSProperties } from 'react'
 import { keyLabel } from '../game/settings'
 import type { Settings } from '../game/settings'
-import { songs } from '../songs/catalog'
 import { themeStyle } from '../songs/presentation'
 import { useMenuKeyboard } from './useMenuKeyboard'
 import { HomeMusic } from './HomeMusic'
 import { HowToPlay } from './HowToPlay'
 
 export function HomeScreen({ settings, selected, onSongChange, onVolumeChange, onPlay, onConfig }: { settings: Settings; selected: string; onSongChange: (songId: string) => void; onVolumeChange: (volume: number) => void; onPlay: (songId: string) => void; onConfig: () => void }) {
+  const { songs } = useSession()
   const navigation = useRef<HTMLElement>(null)
   const spectrum = useRef<HTMLCanvasElement>(null)
   const [modes, setModes] = useState(false), [help, setHelp] = useState(false)
