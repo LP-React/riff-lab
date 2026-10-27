@@ -43,7 +43,21 @@ Firebase CLI is a local development dependency. Run commands from the repository
 
 `hosting-assets/` is the only public deployment directory, containing `songs/<id>/<content-version>/chart.json` and media. `hosting-metadata/<id>.json` holds the corresponding Firestore draft outside the public directory. Both generated directories and Firebase's local cache are ignored by Git. Export does not write to Firestore and leaves the local draft as `published: false`.
 
-After uploading, `pnpm hosting:publish <id>` checks asset availability, CORS and chart difficulties without writing. `pnpm hosting:publish <id> --publish` explicitly fills the existing Firestore draft and publishes it, with an update-time precondition to prevent overwriting concurrent edits. It preserves unrelated document fields. This local administration script reuses the Firebase CLI login through its internal auth module; retest it when upgrading the CLI. It does not expose credentials to the web app or terminal output. New songs need an existing draft document. Normal publication follows the daily cache policy, so it is not guaranteed to appear immediately in an already-running deployment.
+After uploading, `pnpm hosting:publish <id>` checks asset availability, CORS and chart difficulties without writing. `pnpm hosting:publish <id> --publish` creates or updates and publishes the Firestore entry. Existing records use an update-time precondition and field mask to preserve unrelated fields and prevent concurrent edits being overwritten; new records require that the ID not already exist. No manual draft creation is required. This local administration script reuses the Firebase CLI login through its internal auth module; retest it when upgrading the CLI. It does not expose credentials to the web app or terminal output. Normal publication follows the daily cache policy, so it is not guaranteed to appear immediately in an already-running deployment.
+
+## Bulk publication
+
+For the complete imported catalog, run these commands in order:
+
+```sh
+pnpm hosting:prepare --all
+pnpm hosting:deploy
+pnpm hosting:publish --all --publish
+```
+
+If new folders were added to `src/musics`, run `pnpm import:songs` first to regenerate the imported catalog. `--all` selects the IDs in `src/generated/songs/manifest.json`, excluding stale or unrelated JSON files in the export directory. Preparation writes only local generated files, Hosting deploy uploads the files, and the last command creates/updates the Firestore documents with `published: true`. It can also republish a previously unpublished ID, so use a single song ID when only adding one song.
+
+`pnpm hosting:publish --all` validates the uploaded files without making Firestore writes. All assets are validated before any document changes. Lists of 1–400 songs and at most 8 MiB of encoded metadata are committed atomically: a missing file or concurrent edit stops the operation, rather than partially publishing the list. Larger lists must be split into smaller publications. A network timeout can leave the result uncertain; check Firestore before repeating. Spark read/write quotas still apply. These are ordinary document writes, not Firebase's managed import/export service, which requires Blaze.
 
 The first local sample contains three files totaling approximately 2.7 MB. Hosting sends public cross-origin headers for audio/JSON downloads, with a one-hour HTTP cache independent of the daily catalog data cache. Firebase CLI's `protobufjs` and optional native `re2` build scripts are explicitly disabled; CLI startup is verified.
 

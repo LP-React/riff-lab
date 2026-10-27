@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto'
 import { mkdir, readFile, writeFile, realpath, lstat } from 'node:fs/promises'
 import { basename, dirname, resolve, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { hostingSelection } from './hosting-selection.mjs'
 
 const projectRoot = fileURLToPath(new URL('../', import.meta.url))
 
@@ -63,6 +64,13 @@ export async function exportHostingSong(id, project = projectRoot) {
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  console.log(JSON.stringify(await exportHostingSong(process.argv[2]), null, 2))
+  const ids = await hostingSelection(process.argv[2], projectRoot)
+  let files = 0, bytes = 0
+  for (const id of ids) {
+    const result = await exportHostingSong(id)
+    files += result.files; bytes += result.bytes
+    console.log(JSON.stringify(result))
+  }
+  console.log(`Prepared ${ids.length} songs, ${files} files, ${(bytes / 1024 / 1024).toFixed(2)} MiB.`)
   console.log('Prepared locally only. No files uploaded and no Firestore documents changed.')
 }

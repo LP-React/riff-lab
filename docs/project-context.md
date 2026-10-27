@@ -40,6 +40,8 @@ First-phase target: per-song difficulties, synchronized audio, chords, sustains,
 | Authenticate Firebase CLI | `pnpm firebase:login` |
 | Deploy static song assets | `pnpm hosting:deploy` |
 | Validate/publish one Firestore song | `pnpm hosting:publish <id> [--publish]` |
+| Prepare all imported songs for Hosting | `pnpm hosting:prepare --all` |
+| Validate/publish all imported songs | `pnpm hosting:publish --all [--publish]` |
 | Import all song folders | `pnpm import:songs` |
 | Legacy import alias | `pnpm import:dragonforce` |
 
