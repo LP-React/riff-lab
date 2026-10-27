@@ -65,7 +65,7 @@ Exports add versions without deleting earlier packages. Each Hosting deployment 
 
 ## Current verification and remaining work
 
-- Megitsune's three files are live on `https://riff-lab-maps.web.app/songs/f726df32cc0b8440/4bbcd016dd12ea88/`; its Firestore entry is published with all four difficulties. Remaining local songs have not been migrated to Hosting/Firestore.
+- All 15 imported songs are uploaded to Hosting (47 files, 53.39 MiB) and published in Firestore. The public reader validates all 15 and matches their IDs against the imported manifest. Hosting publication must precede metadata publication; otherwise the validator rejects missing assets with HTTP 404 and writes no documents.
 - Browser verification covers remote preview playback, Home playback, entering a prepared game, pausing and returning to the menus. Full-song completion and every difficulty have not been playtested.
 - The Next.js application changes are local until its usual deployment is updated; uploading static song files does not deploy the web app.
 - Add an authenticated cache invalidation workflow for urgent withdrawals. Daily cache expiry alone does not provide immediate removal, and hiding metadata does not revoke hosted file URLs.
