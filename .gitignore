@@ -16,6 +16,14 @@ next-env.d.ts
 *.tsbuildinfo
 public/songs
 *.local
+.env
+.env.*
+!.env.example
+**/*firebase-adminsdk*.json
+**/service-account*.json
+*.pem
+src/musics/
+src/generated/songs/
 .firebase/
 hosting-assets/
 hosting-metadata/

@@ -13,7 +13,7 @@ No song-specific code or authored maps are required for supported packages. Reru
 - `src/musics`: canonical original packages; never rewritten by import.
 - `scripts/song-package.mjs`: recursive discovery, INI metadata, conventional media discovery, validation, per-folder error isolation.
 - `scripts/midi-chart.mjs` / `text-chart.mjs`: original MIDI or text-chart ticks converted to audio-origin seconds, chords, sustains, beats, and boost phrases.
-- `src/generated/songs`: reproducible derived JSON plus `manifest.json`, separated from application code. These artifacts are checked in so a fresh checkout can build; users never supply this format.
+- `src/generated/songs`: local-only reproducible derived JSON plus `manifest.json`, ignored by Git. Fresh checkouts build/play from Firebase without these files; offline import/export requires local source packages. Users never supply this derived format.
 - `scripts/prepare-song-assets.mjs`: copies referenced charts/media into the exclusively generated, ignored `public/songs` cache. Import, development, and build prepare this cache; original packages remain unchanged. Do not place original assets in this cache.
 - `src/songs/catalog.ts`: builds a catalog from the manifest and public asset URLs, fetching only the selected chart. `types.ts` and `audio-loader.ts` define runtime data and sequential selected-song decoding.
 - `src/songs/presentation.json`: optional manual palettes, backgrounds, descriptions, and display metadata layered over imports; never regenerated. See [song presentation](song-presentation.md).

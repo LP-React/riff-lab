@@ -10,6 +10,10 @@ The root Server Component provides the cached catalog to the client session. Hom
 
 Development/build clear only the ignored, generated legacy `public/songs` directory and no longer copy local song packages. Original packages and imported charts remain available for the offline tooling. They are not used as the runtime catalog.
 
+`src/musics/` and `src/generated/songs/` are local-only and ignored by Git. A fresh checkout can build and play from Firebase without them. Put source packages in `src/musics/` and run `pnpm import:songs` before using the offline export commands. Three optional real-package regression tests skip when their local packages are absent; synthetic parser/game/export tests still run. Untracking files removes them from the current tree, not from historical commits.
+
+Only the public `FIREBASE_PROJECT_ID` is configured for the web app. `.env.example` is tracked; real `.env` files, typical Admin credential files, Firebase debug logs and generated exports are ignored. The public project ID and Hosting URLs are not administrator credentials. The CLI session stays outside the repository, and Firestore rules deny public writes. Never commit service-account private keys or CLI tokens.
+
 The server explicitly caches the upstream POST query with Next.js `fetch`, `force-cache`, and `next.revalidate: 86400`. Revalidation is driven by requests after expiry, not a daily scheduled job; the first stale response can precede the background refresh. Errors return HTTP 502 rather than masquerading as an empty catalog. Browsers receive `Cache-Control: no-store` so they do not add another daily cache. Next.js server hosting is required; static export cannot provide this endpoint/cache. Development hard reloads can bypass the data cache.
 
 The default project ID is `riff-lab-maps`. Optionally copy `.env.example` to `.env.local` or configure `FIREBASE_PROJECT_ID` in the deployment environment to select another project.

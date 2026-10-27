@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { readFile } from 'node:fs/promises'
+import { existsSync } from 'node:fs'
 import { writeMidi } from 'midi-file'
 import { convertMidi } from '../scripts/midi-chart.mjs'
 
@@ -26,8 +27,10 @@ test('tempo changes, velocity-zero releases, difficulty mapping and sustain leng
   assert.deepEqual(data.beats.slice(0, 3), [.1, .6, 1.6])
 })
 
-test('DragonForce import retains all difficulties and excludes modifier notes', async () => {
-  const bytes = await readFile(new URL('../src/musics/Dragonforce - Through The Fire & Flames (Neversoft)/notes.mid', import.meta.url))
+test('DragonForce import retains all difficulties and excludes modifier notes', async t => {
+  const path = new URL('../src/musics/Dragonforce - Through The Fire & Flames (Neversoft)/notes.mid', import.meta.url)
+  if (!existsSync(path)) { t.skip('Optional local song package is not installed.'); return }
+  const bytes = await readFile(path)
   const data = convertMidi(bytes)
   assert.deepEqual(Object.values(data.charts).map(notes => notes.length), [1102, 1823, 2723, 3722])
   assert.equal(data.charts.expert[0].time, 2.414)
